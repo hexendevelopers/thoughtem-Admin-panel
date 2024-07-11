@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Blogs</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex">
+
+     <!-- Sidebar -->
+     <div class="bg-black text-white w-64 min-h-screen">
+        <div class="p-4">
+            <h1 class="text-3xl font-bold">Thought.em</h1>
+        </div>
+        <div class="flex flex-col justify-start items-start p-4">
+            <!-- <a href="index.html" class="py-2 px-4 text-white hover:bg-gray-800 rounded-full">Home</a> -->
+            <a href="index.html" class="py-2 px-4 text-white hover:bg-gray-800 rounded-full">Projects</a>
+            <a href="allblogs.html" class="py-2 px-4 text-white  hover:bg-gray-800 rounded-full">Blogs</a>
+            <!-- Add more links as needed -->
+        </div>
+    </div>
+        <!-- Sidebar -->
+    
+    
+
+    <!-- Main Content -->
+    <div class="flex flex-col w-full">
+        <div class="p-8">
+            <h2 class="text-4xl font-semibold mb-4">All Blog Posts</h2>
+            <button id="navigate" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">  Add New Blog </button>            
+            <div id="blogsList" class="space-y-4  pt-10"></div>
+        </div>
+    </div>
+
+    <!-- Include allblogs.js -->
+    <script type="module" src="/js/allblogs.js"></script>
+</body>
+</html>
