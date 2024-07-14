@@ -17,8 +17,7 @@ const database = getDatabase(app);
 const storage = getStorage(app);
 
 const projectNameInput = document.getElementById('projectName');
-const categoryInput = document.getElementById('category');
-const projectTypeInput = document.getElementById('projectType');
+ const projectTypeInput = document.getElementById('projectType');
 const projectFileInput = document.getElementById('projectFile');
 const addProjectButton = document.getElementById('addProject');
 const messageElement = document.getElementById('message');
@@ -42,11 +41,10 @@ fetchProjectCount();
 
 addProjectButton.addEventListener('click', async () => {
     const projectName = projectNameInput.value;
-    const category = categoryInput.value;
-    const projectType = projectTypeInput.value;
+     const projectType = projectTypeInput.value;
     const projectFile = projectFileInput.files[0];
 
-    if (projectName && category && projectType && projectFile) {
+    if (projectName &&   projectType && projectFile) {
         try {
             // Upload file to Firebase Storage
             const storageRefPath = storageRef(storage, 'projects/' + projectFile.name);
@@ -58,8 +56,7 @@ addProjectButton.addEventListener('click', async () => {
             const newProjectRef = push(projectsRef);
             await set(newProjectRef, {
                 name: projectName,
-                category: category,
-                type: projectType,
+                 type: projectType,
                 fileURL: fileURL
             });
 

@@ -43,8 +43,7 @@ async function fetchProjects() {
 
             projectElement.innerHTML = `
                 <h3 class="text-xl text-blue font-bold">${project.name}</h3>
-                <p class="text-gray-700"><strong>Category:</strong> ${project.category}</p>
-                <p class="text-gray-700"><strong>Type:</strong> ${project.type}</p>
+                 <p class="text-gray-700"><strong>category:</strong> ${project.type}</p>
                 <img width="100" src="${project.fileURL}" alt="${project.name}" class="w-72 rounded-lg h-auto mt-2">
                 <button class="delete-button bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4" data-key="${key}">Delete</button>
             `;
