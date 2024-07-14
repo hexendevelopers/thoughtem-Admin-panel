@@ -21,6 +21,18 @@ const storage = getStorage(app);
 // Reference to the Firebase database
 const blogForm = document.getElementById('blogForm');
 const messageElement = document.getElementById('message');
+const paragraphsContainer = document.getElementById('paragraphsContainer');
+const addParagraphButton = document.getElementById('addParagraph');
+
+// Function to add a new paragraph input area
+addParagraphButton.addEventListener('click', function() {
+    const paragraphDiv = document.createElement('div');
+    paragraphDiv.innerHTML = `
+        <label for="paragraph" class="block text-sm font-medium text-gray-700">Paragraph</label>
+        <textarea name="paragraph" rows="3" class="mt-1 px-3 py-2 border rounded-md block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+    `;
+    paragraphsContainer.appendChild(paragraphDiv);
+});
 
 // Event listener for form submission
 blogForm.addEventListener('submit', async function(event) {
@@ -36,6 +48,10 @@ blogForm.addEventListener('submit', async function(event) {
         return;
     }
 
+    // Collect paragraph texts
+    const paragraphElements = paragraphsContainer.querySelectorAll('textarea[name="paragraph"]');
+    const paragraphs = Array.from(paragraphElements).map(paragraph => paragraph.value);
+
     // Upload image to Firebase Storage
     const imageStorageRef = storageRef(storage, 'blog_images/' + imageFile.name);
 
@@ -48,11 +64,13 @@ blogForm.addEventListener('submit', async function(event) {
         await push(blogRef, {
             title: title,
             description: description,
-            imageUrl: imageUrl
+            imageUrl: imageUrl,
+            paragraphs: paragraphs
         });
 
         // Reset form and display success message
         blogForm.reset();
+        paragraphsContainer.innerHTML = '';
         messageElement.textContent = "Blog post saved successfully!";
     } catch (error) {
         console.error('Error uploading image or saving blog post:', error);

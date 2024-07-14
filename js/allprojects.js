@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/fireba
 import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
+    apiKey: "AIzaSyBe6bcCAYg_HsdDukkQRcQIJC0JGEO6DLw",
     authDomain: "thoughtem-4fa2b.firebaseapp.com",
     databaseURL: "https://thoughtem-4fa2b-default-rtdb.firebaseio.com",
     projectId: "thoughtem-4fa2b",
@@ -11,74 +11,71 @@ const firebaseConfig = {
     appId: "1:337631869633:web:b2699fac77e801619f3240"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-const projectsListElement = document.getElementById('projectsList');
-const projectsAddedValueElement = document.getElementById('projectsaddedvalue');
 
-// Fetch and display the total number of projects
-async function fetchProjectCount() {
-    const projectsRef = ref(database, 'projects');
-    const snapshot = await get(projectsRef);
-    if (snapshot.exists()) {
-        const projects = snapshot.val();
-        const projectCount = Object.keys(projects).length;
-        projectsAddedValueElement.textContent = projectCount < 10 ? `0${projectCount}` : projectCount;
-    } else {
-        projectsAddedValueElement.textContent = "00";
-    }
-}
+const projectsAddedValue = document.getElementById('projectsaddedvalue');
+const projectsList = document.getElementById('projectsList');
+const navigateButton = document.getElementById('navigate');
 
-// Fetch and display all projects
+navigateButton.addEventListener('click', () => {
+    window.location.href = "index.html";
+});
+
+// Fetch and display the total number of projects and their details
 async function fetchProjects() {
     const projectsRef = ref(database, 'projects');
     const snapshot = await get(projectsRef);
 
     if (snapshot.exists()) {
         const projects = snapshot.val();
-        projectsListElement.innerHTML = '';
-        for (const projectId in projects) {
-            const project = projects[projectId];
-            const projectElement = document.createElement('div');
-            projectElement.classList.add('mb-4', 'p-4', 'border', 'rounded-md', 'bg-gray-50');
-            projectElement.innerHTML = `
-                <h3 class="text-lg font-semibold mb-2">${project.name}</h3>
-                <img width="200" src="${project.fileURL}" alt="${project.name}" class="mb-2 max-w-full h-auto"/>
-                <button class="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-700 delete-button" data-id="${projectId}">
-                    Delete
-                </button>
-            `;
-            projectsListElement.appendChild(projectElement);
-        }
+        const projectCount = Object.keys(projects).length;
+        projectsAddedValue.textContent = projectCount < 10 ? `0${projectCount}` : projectCount;
 
-        // Add delete event listeners
-        document.querySelectorAll('.delete-button').forEach(button => {
+        // Clear the current projects list
+        projectsList.innerHTML = '';
+
+        // Create and append project elements to the list
+        Object.keys(projects).forEach(key => {
+            const project = projects[key];
+            const projectElement = document.createElement('div');
+            projectElement.className = 'bg-white p-4 mb-4 rounded shadow';
+
+            projectElement.innerHTML = `
+                <h3 class="text-xl text-blue font-bold">${project.name}</h3>
+                <p class="text-gray-700"><strong>Category:</strong> ${project.category}</p>
+                <p class="text-gray-700"><strong>Type:</strong> ${project.type}</p>
+                <img width="100" src="${project.fileURL}" alt="${project.name}" class="w-72 rounded-lg h-auto mt-2">
+                <button class="delete-button bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4" data-key="${key}">Delete</button>
+            `;
+
+            projectsList.appendChild(projectElement);
+        });
+
+        // Add event listeners to all delete buttons
+        const deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(button => {
             button.addEventListener('click', async (event) => {
-                const projectId = event.target.getAttribute('data-id');
-                await deleteProject(projectId);
+                const key = event.target.getAttribute('data-key');
+                await deleteProject(key);
             });
         });
     } else {
-        projectsListElement.innerHTML = '<p class="text-center text-gray-500">No projects found.</p>';
+        projectsAddedValue.textContent = "00";
+        projectsList.innerHTML = '<p class="text-gray-700">No projects found.</p>';
     }
 }
 
-// Delete a project
-async function deleteProject(projectId) {
-    const projectRef = ref(database, 'projects/' + projectId);
+// Delete project function
+async function deleteProject(key) {
+    const projectRef = ref(database, `projects/${key}`);
     await remove(projectRef);
-    fetchProjects(); // Refresh the project list
+    fetchProjects();
 }
 
-// Fetch initial data
-fetchProjectCount();
+// Initial fetch of projects
 fetchProjects();
-
-
-
 
 document.getElementById("navigate").addEventListener("click", () => {
     window.location.href = "addproject.html";
 });
-

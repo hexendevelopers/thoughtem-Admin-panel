@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-import { getDatabase, ref, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 import { getStorage, ref as storageRef, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
 
 // Firebase configuration
@@ -12,6 +12,7 @@ const firebaseConfig = {
     messagingSenderId: "337631869633",
     appId: "1:337631869633:web:b2699fac77e801619f3240"
 };
+
 // Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
@@ -34,10 +35,18 @@ onValue(blogPostsRef, (snapshot) => {
             <h3 class="text-xl font-bold">${blogPost.title}</h3>
             <p>${blogPost.description}</p>
             <img src="${blogPost.imageUrl}" alt="${blogPost.title}" class="w-32 h-32 object-cover">
+            <div class="paragraphs">
+                ${blogPost.paragraphs ? blogPost.paragraphs.map((paragraph, index) => `
+                    <p>${paragraph}</p>
+                `).join('') : ''}
+            </div>
             <button class="show-edit-btn bg-blue-500 text-white py-2 px-4 rounded mt-2" data-key="${blogPostKey}">Edit</button>
             <div class="edit-fields hidden">
                 <input type="text" class="edit-title mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="${blogPost.title}">
                 <textarea class="edit-description mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">${blogPost.description}</textarea>
+                ${blogPost.paragraphs ? blogPost.paragraphs.map((paragraph, index) => `
+                    <textarea class="edit-paragraph mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">${paragraph}</textarea>
+                `).join('') : ''}
                 <div class="message mt-2 text-green-600"></div>
                 <button class="save-btn bg-green-500 text-white py-2 px-4 rounded mt-2" data-key="${blogPostKey}">Save</button>
                 <button class="delete-btn bg-red-500 text-white py-2 px-4 rounded mt-2" data-key="${blogPostKey}" data-image="${blogPost.imageUrl}">Delete</button>
@@ -66,21 +75,39 @@ function handleShowEdit(event) {
 }
 
 // Handle save button click
+// Handle save button click
 async function handleSave(event) {
     const blogPostKey = event.target.dataset.key;
     const blogElement = event.target.closest('div');
     const newTitle = blogElement.querySelector('.edit-title').value;
     const newDescription = blogElement.querySelector('.edit-description').value;
+    const editParagraphsElements = blogElement.querySelectorAll('.edit-paragraph');
     const messageElement = blogElement.querySelector('.message');
 
-    const blogPostRef = ref(database, `blogPosts/${blogPostKey}`);
+    console.log('Blog post key:', blogPostKey);
+    console.log('New title:', newTitle);
+    console.log('New description:', newDescription);
 
     if (newTitle.trim() !== '' && newDescription.trim() !== '') {
         try {
-            await update(blogPostRef, {
-                title: newTitle,
-                description: newDescription
+            // Collect updated paragraphs
+            const updatedParagraphs = [];
+            editParagraphsElements.forEach(paragraphElement => {
+                updatedParagraphs.push(paragraphElement.value);
             });
+
+            // Prepare updated data
+            const updatedData = {
+                title: newTitle,
+                description: newDescription,
+                paragraphs: updatedParagraphs
+            };
+
+            // Update blog post
+            const blogPostRef = ref(database, `blogPosts/${blogPostKey}`);
+            await update(blogPostRef, updatedData);
+            console.log('Blog post updated successfully');
+
             messageElement.textContent = 'Blog post updated successfully!';
         } catch (error) {
             console.error('Error updating blog post:', error);
@@ -90,6 +117,7 @@ async function handleSave(event) {
         messageElement.textContent = 'Please fill in all fields.';
     }
 }
+
 
 // Handle delete button click
 async function handleDelete(event) {
@@ -110,8 +138,6 @@ async function handleDelete(event) {
         messageElement.textContent = 'Failed to delete blog post.';
     }
 }
- 
-
 
 document.getElementById("navigate").addEventListener("click", () => {
     window.location.href = "addblog.html";

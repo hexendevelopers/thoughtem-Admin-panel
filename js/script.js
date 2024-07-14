@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-import { getDatabase, ref, set, push, get } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js"; 
+import { getDatabase, ref, set, push, get } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
 
 const firebaseConfig = {
@@ -10,14 +10,15 @@ const firebaseConfig = {
     storageBucket: "thoughtem-4fa2b.appspot.com",
     messagingSenderId: "337631869633",
     appId: "1:337631869633:web:b2699fac77e801619f3240"
-  };
+};
 
- 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const storage = getStorage(app);
 
 const projectNameInput = document.getElementById('projectName');
+const categoryInput = document.getElementById('category');
+const projectTypeInput = document.getElementById('projectType');
 const projectFileInput = document.getElementById('projectFile');
 const addProjectButton = document.getElementById('addProject');
 const messageElement = document.getElementById('message');
@@ -41,9 +42,11 @@ fetchProjectCount();
 
 addProjectButton.addEventListener('click', async () => {
     const projectName = projectNameInput.value;
+    const category = categoryInput.value;
+    const projectType = projectTypeInput.value;
     const projectFile = projectFileInput.files[0];
 
-    if (projectName && projectFile) {
+    if (projectName && category && projectType && projectFile) {
         try {
             // Upload file to Firebase Storage
             const storageRefPath = storageRef(storage, 'projects/' + projectFile.name);
@@ -55,6 +58,8 @@ addProjectButton.addEventListener('click', async () => {
             const newProjectRef = push(projectsRef);
             await set(newProjectRef, {
                 name: projectName,
+                category: category,
+                type: projectType,
                 fileURL: fileURL
             });
 
@@ -78,11 +83,8 @@ addProjectButton.addEventListener('click', async () => {
         }
     } else {
         // Display validation message
-        messageElement.textContent = 'Please provide both a project name and a file.';
+        messageElement.textContent = 'Please provide a project name, category, project type, and file.';
         messageElement.classList.remove('text-green-500');
         messageElement.classList.add('text-red-500');
     }
 });
- 
-
- 

@@ -10,29 +10,24 @@
 
    <!-- Sidebar -->
    <div class="bg-black text-white w-64 min-h-screen">
-    <div class="p-4">
-        <h1 class="text-3xl font-bold">Thought.em</h1>
+        <div class="p-4">
+            <h1 class="text-3xl font-bold">Thought.em</h1>
+        </div>
+        <div class="flex flex-col justify-start items-start p-4">
+            <a href="index.html" class="py-2 px-4 text-white hover:bg-gray-800 rounded-full">Projects</a>
+            <a href="allblogs.html" class="py-2 px-4 text-white  hover:bg-gray-800 rounded-full">Blogs</a>
+        </div>
     </div>
-    <div class="flex flex-col justify-start items-start p-4">
-        <!-- <a href="index.html" class="py-2 px-4 text-white hover:bg-gray-800 rounded-full">Home</a> -->
-        <a href="index.html" class="py-2 px-4 text-white hover:bg-gray-800 rounded-full">Projects</a>
-        <a href="allblogs.html" class="py-2 px-4 text-white  hover:bg-gray-800 rounded-full">Blogs</a>
-        <!-- Add more links as needed -->
-    </div>
-</div>
     <!-- Sidebar -->
-
-
 
     <!-- Main Content -->
     <div class="flex flex-col w-full">
-        <div class="  p-8  ">
+        <div class="p-8">
             <div>
-                 <h2 class="text-2xl font-semibold mb-4">Create Blogs </h2>
-              <!--   <h2 class="text-2xl font-semibold mb-4">00</h2> -->
-                <!-- <button id="navigateblog" class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Create A New Blog Post</button> -->
+                <h2 class="text-2xl font-semibold mb-4">Create Blogs </h2>
+                <button id="addParagraph" class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Add Paragraph</button>
             </div>
-             <form id="blogForm" class="space-y-4">
+            <form id="blogForm" class="space-y-4">
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
                     <input type="text" id="title" name="title" class="mt-1 block w-full px-3 py-2 border rounded-md border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -41,6 +36,7 @@
                     <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                     <textarea id="description" name="description" rows="3" class="mt-1  px-3 py-2 border rounded-md block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
                 </div>
+                <div id="paragraphsContainer" class="space-y-4"></div>
                 <div>
                     <label for="image" class="block text-sm font-medium text-gray-700">Upload Image</label>
                     <input type="file" id="image" name="image" accept="image/*" class="mt-1 px-3 py-2 border rounded-md block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
